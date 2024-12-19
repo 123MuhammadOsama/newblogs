@@ -8,20 +8,24 @@ import { components } from "@/components/CustomComponent";
 export const revalidate = 10;
 
 export async function generateStaticParams() {
-  const query = `*[_type=='post']{
-    "slug":slug.current
-  }`;
-  const slugs = await client.fetch(query);
-  const slugRoutes = slugs.map((item: { slug: string }) => item.slug);
-  return slugRoutes.map((slug: string) => ({ slug }));
-}
+    const query = `*[_type=='post']{
+      "slug":slug.current
+    }`;
+    const slugs = await client.fetch(query);
+  
+    // Return an array of params objects
+    return slugs.map((item: { slug: string }) => ({
+      params: { slug: item.slug },
+    }));
+  }
+  
 
-export default async function Page({ params: { slug } }: { params: { slug: string } }) {
-  const query = `*[_type=='post' && slug.current=="${slug}"]{
-    title,summary,image,content,
-      author->{bio,image,name}
-  }[0]`;
-  const post = await client.fetch(query);
+  export default async function Page({ params: { slug } }: { params: { slug: string } }) {
+    const query = `*[_type=='post' && slug.current=="${slug}"]{
+      title,summary,image,content,
+        author->{bio,image,name}
+    }[0]`;
+    const post = await client.fetch(query);
 
   return (
     <article className="mt-12 mb-24 px-2 2xl:px-12 flex flex-col gap-y-8">
