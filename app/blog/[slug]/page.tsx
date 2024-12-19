@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { client } from "@/sanity/lib/client";
